@@ -1,0 +1,193 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+
+const allNews = (await getCollection('news')).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+
+const allTags = [...new Set(allNews.flatMap((news) => news.data.tags))].sort();
+
+const formatDate = (date: Date) => {
+	return date.toLocaleDateString('en-US', {
+		year: 'numeric',
+		month: 'short',
+		day: 'numeric',
+	}).toUpperCase();
+};
+---
+
+<Layout title="SWE AI Dev News">
+	
+	<!-- Tags filter -->
+	<section class="mb-10">
+		<div class="flex flex-wrap items-center justify-between mb-4 gap-4">
+			<div class="flex items-center gap-3">
+				<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-neutral-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" /></svg>
+				<h2 class="text-xs font-mono text-neutral-400 uppercase tracking-wider">Filter by Topic</h2>
+			</div>
+			<a href={import.meta.env.BASE_URL} id="clear-filter-btn" class="hidden text-xs font-mono text-orange-400 hover:text-orange-300 flex items-center gap-1.5 transition-colors border border-orange-500/30 bg-orange-500/10 px-2.5 py-1.5 rounded-md shadow-sm">
+				<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" /></svg>
+				Clear Filter
+			</a>
+		</div>
+		<div class="flex flex-wrap gap-2">
+			<a href={import.meta.env.BASE_URL} class="px-3 py-1.5 text-xs font-mono rounded-md border border-neutral-800 bg-neutral-900 text-neutral-400 hover:bg-neutral-800 hover:text-white transition-all shadow-sm" data-filter="all">All Topics</a>
+			{allTags.map((tag) => (
+				<a href={`${import.meta.env.BASE_URL}?tag=${tag}`} class="px-3 py-1.5 text-xs font-mono rounded-md border border-neutral-800 bg-neutral-900 text-neutral-400 hover:bg-neutral-800 hover:text-white transition-all shadow-sm" data-tag-link={tag}>
+					{tag}
+				</a>
+			))}
+		</div>
+	</section>
+
+	<section>
+		<div class="space-y-6">
+			{allNews.map((news) => (
+				<article class="group news-item bg-neutral-900/40 border border-neutral-800/60 rounded-xl p-6 hover:bg-neutral-900 transition-all hover:border-neutral-700 hover:shadow-lg hover:shadow-black/50 relative overflow-hidden" data-tags={news.data.tags.join(',')}>
+                    <!-- Subtle gradient glow on hover -->
+                    <div class="absolute inset-0 bg-gradient-to-r from-blue-500/0 via-blue-500/0 to-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+
+					<div class="flex flex-col gap-4">
+                        <header>
+                            <div class="flex flex-wrap items-center gap-x-4 gap-y-2 mb-3">
+                                <time class="text-xs font-mono text-neutral-500 flex items-center gap-1.5">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                                    {formatDate(news.data.pubDate)}
+                                </time>
+                                <div class="flex flex-wrap gap-1.5">
+                                    {news.data.tags.map(tag => (
+                                        <a href={`${import.meta.env.BASE_URL}?tag=${tag}`} class="text-[10px] font-mono tracking-wider px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 transition-colors border border-blue-500/20">
+                                            {tag}
+                                        </a>
+                                    ))}
+                                </div>
+                            </div>
+                            
+                            <h3 class="text-xl md:text-2xl font-bold leading-tight">
+                                <a href={news.data.sourceUrl} target="_blank" rel="noopener noreferrer" class="text-white hover:text-blue-400 transition-colors flex items-center gap-2 group/link">
+                                    <span>{news.data.title}</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 opacity-0 -ml-4 group-hover/link:opacity-100 group-hover/link:ml-0 transition-all text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+                                </a>
+                            </h3>
+                        </header>
+						
+						<p class="text-neutral-400 leading-relaxed text-sm md:text-base">
+							{news.data.summary}
+						</p>
+					</div>
+				</article>
+			))}
+
+			{allNews.length === 0 && (
+				<div class="text-center py-24 bg-neutral-900/30 rounded-xl border border-neutral-800 border-dashed">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 md:w-16 md:h-16 text-neutral-600 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9.5a2 2 0 00-.586-1.414l-4.5-4.5A2 2 0 0012.586 3H12" /></svg>
+					<h3 class="text-xl font-medium text-neutral-300 mb-2">No intelligence found.</h3>
+                    <p class="text-neutral-500 font-mono text-sm">The collection database is currently empty.</p>
+				</div>
+			)}
+		</div>
+
+		<!-- Pagination Controls -->
+		<div id="pagination-controls" class="hidden mt-10 flex flex-col md:flex-row items-center justify-between gap-4 border-t border-neutral-800/60 pt-6"></div>
+	</section>
+
+	<script>
+		const params = new URLSearchParams(window.location.search);
+		const activeTag = params.get('tag');
+		const activePage = parseInt(params.get('page') || '1', 10);
+		const ITEMS_PER_PAGE = 20;
+
+		const newsItems = Array.from(document.querySelectorAll('.news-item')) as HTMLElement[];
+		let filteredItems = newsItems;
+		const clearBtn = document.getElementById('clear-filter-btn');
+
+		// 1. Tag Filtering
+		if (activeTag) {
+			if (clearBtn) clearBtn.classList.remove('hidden');
+
+			filteredItems = newsItems.filter(el => {
+				const tagsAttr = el.getAttribute('data-tags');
+				return tagsAttr && tagsAttr.toLowerCase().split(',').map(s => s.trim()).includes(activeTag.toLowerCase().trim());
+			});
+
+			newsItems.forEach(el => {
+				if (!filteredItems.includes(el)) {
+					el.style.display = 'none';
+				}
+			});
+
+			document.querySelectorAll('[data-tag-link]').forEach(link => {
+				const linkTag = link.getAttribute('data-tag-link');
+				if (linkTag && linkTag.toLowerCase().trim() === activeTag.toLowerCase().trim()) {
+					link.classList.remove('bg-neutral-900', 'text-neutral-400', 'border-neutral-800');
+					link.classList.add('bg-blue-500/10', 'text-blue-400', 'border-blue-500/30');
+				}
+			});
+		} else {
+			const allLink = document.querySelector('[data-filter="all"]');
+			if (allLink) {
+				allLink.classList.remove('bg-neutral-900', 'text-neutral-400', 'border-neutral-800');
+				allLink.classList.add('bg-blue-500/10', 'text-blue-400', 'border-blue-500/30');
+			}
+		}
+
+		// 2. Pagination Logic
+		if (filteredItems.length > ITEMS_PER_PAGE) {
+			const totalPages = Math.ceil(filteredItems.length / ITEMS_PER_PAGE);
+			const startIndex = (activePage - 1) * ITEMS_PER_PAGE;
+			const endIndex = startIndex + ITEMS_PER_PAGE;
+
+			filteredItems.forEach((el, index) => {
+				if (index >= startIndex && index < endIndex) {
+					el.style.display = 'block';
+				} else {
+					el.style.display = 'none';
+				}
+			});
+
+			const paginationContainer = document.getElementById('pagination-controls');
+			if (paginationContainer) {
+				paginationContainer.classList.remove('hidden');
+				paginationContainer.classList.add('flex');
+				
+				const prevDisabled = activePage <= 1;
+				const nextDisabled = activePage >= totalPages;
+
+				const createUrl = (page: number) => {
+					const newParams = new URLSearchParams(window.location.search);
+					newParams.set('page', page.toString());
+					return `${window.location.pathname}?${newParams.toString()}`;
+				};
+
+				paginationContainer.innerHTML = `
+					<div class="text-sm font-mono text-neutral-500 mb-4 md:mb-0">
+						Showing ${Math.min(startIndex + 1, filteredItems.length)}-${Math.min(endIndex, filteredItems.length)} of ${filteredItems.length} intelligence logs
+					</div>
+					<div class="flex items-center gap-2">
+						<a href="${prevDisabled ? '#' : createUrl(activePage - 1)}" 
+						   class="px-3 py-1.5 text-xs font-mono rounded-md border border-neutral-800 ${prevDisabled ? 'opacity-50 cursor-not-allowed bg-neutral-900/50 text-neutral-600' : 'bg-neutral-900 text-neutral-400 hover:bg-neutral-800 hover:text-white'} transition-all shadow-sm">
+							Previous
+						</a>
+						<div class="flex items-center gap-1 mx-2">
+							${Array.from({ length: totalPages }, (_, i) => i + 1).map(page => `
+								<a href="${createUrl(page)}" 
+								   class="w-7 h-7 flex items-center justify-center text-xs font-mono rounded-md border ${page === activePage ? 'bg-blue-500/10 border-blue-500/30 text-blue-400' : 'border-neutral-800 bg-neutral-900 text-neutral-400 hover:bg-neutral-800 hover:text-white'} transition-all shadow-sm">
+									${page}
+								</a>
+							`).join('')}
+						</div>
+						<a href="${nextDisabled ? '#' : createUrl(activePage + 1)}" 
+						   class="px-3 py-1.5 text-xs font-mono rounded-md border border-neutral-800 ${nextDisabled ? 'opacity-50 cursor-not-allowed bg-neutral-900/50 text-neutral-600' : 'bg-neutral-900 text-neutral-400 hover:bg-neutral-800 hover:text-white'} transition-all shadow-sm">
+							Next
+						</a>
+					</div>
+				`;
+			}
+		} else {
+			filteredItems.forEach(el => {
+				el.style.display = 'block';
+			});
+		}
+	</script>
+</Layout>

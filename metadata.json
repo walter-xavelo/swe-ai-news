@@ -1,0 +1,5 @@
+{
+  "name": "AI Dev News Terminal",
+  "description": "A clean terminal-style AI news aggregator for software engineering.",
+  "requestFramePermissions": []
+}

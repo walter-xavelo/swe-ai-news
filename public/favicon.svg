@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <radialGradient id="sparkGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#3b82f6" stop-opacity="1"/>
+      <stop offset="100%" stop-color="#3b82f6" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="bracketGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#a3a3a3"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- App Background Color -->
+  <rect width="100" height="100" rx="24" fill="#0a0a0a"/>
+  
+  <!-- Subtle Border -->
+  <rect width="96" height="96" x="2" y="2" rx="22" fill="none" stroke="#262626" stroke-width="2"/>
+  
+  <!-- Coding Brackets: < > (Software Engineering) -->
+  <path d="M 32 30 L 12 50 L 32 70" fill="none" stroke="url(#bracketGrad)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 68 30 L 88 50 L 68 70" fill="none" stroke="url(#bracketGrad)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  
+  <!-- AI Spark (Artificial Intelligence) -->
+  <path d="M 50 25 L 53 47 L 75 50 L 53 53 L 50 75 L 47 53 L 25 50 L 47 47 Z" fill="url(#sparkGlow)"/>
+  <path d="M 50 30 L 52 48 L 70 50 L 52 52 L 50 70 L 48 52 L 30 50 L 48 48 Z" fill="#60a5fa"/>
+</svg>

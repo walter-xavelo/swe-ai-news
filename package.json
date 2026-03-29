@@ -1,0 +1,26 @@
+{
+  "name": "ai-dev-news-terminal",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev --port 3000 --host 0.0.0.0",
+    "start": "astro dev --port 3000 --host 0.0.0.0",
+    "build": "astro build",
+    "preview": "astro preview --port 3000 --host 0.0.0.0",
+    "astro": "astro",
+    "lint": "astro check"
+  },
+  "dependencies": {
+    "@astrojs/check": "^0.9.8",
+    "@astrojs/mdx": "^4.0.8",
+    "@tailwindcss/vite": "^4.2.2",
+    "astro": "^5.4.1",
+    "lucide-react": "^0.546.0",
+    "tailwindcss": "^4.2.2",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "typescript": "~5.8.2"
+  }
+}
