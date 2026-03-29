@@ -10,7 +10,9 @@ An AI Developer News aggregator featuring a retro, terminal-style user interface
 
 - news feed with tag filters
 - visible news counter on the homepage
-- AI summary panel toggled from a button on the homepage
+- AI summary modal triggered from a button on the homepage
+- animated open/close behavior for the summary panel
+- visible "last updated" timestamp for the summary
 - summary content sourced from `src/content/summary.md`
 
 ## Run Locally

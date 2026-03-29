@@ -1,4 +1,6 @@
 ---
+import fs from 'node:fs';
+import path from 'node:path';
 import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
 import SummaryContent from '../content/summary.md';
@@ -9,6 +11,9 @@ const allNews = (await getCollection('news')).sort(
 
 const allTags = [...new Set(allNews.flatMap((news) => news.data.tags))].sort();
 const totalNewsCount = allNews.length;
+
+const summaryPath = path.resolve(process.cwd(), 'src/content/summary.md');
+const summaryUpdatedAt = fs.statSync(summaryPath).mtime;
 
 const formatDate = (date: Date) => {
 	return date.toLocaleDateString('en-US', {
@@ -40,20 +45,35 @@ const formatDate = (date: Date) => {
 					<h2 class="text-lg font-semibold text-white">AI Summary</h2>
 					<p class="text-sm text-neutral-400">A concise overview defined in <code class="font-mono text-xs text-blue-400">summary.md</code>.</p>
 				</div>
-				<button id="toggle-summary-btn" class="px-3 py-2 text-xs font-mono rounded-md border border-blue-500/30 bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 transition-all shadow-sm">
+				<button id="open-summary-btn" class="px-3 py-2 text-xs font-mono rounded-md border border-blue-500/30 bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 transition-all shadow-sm">
 					Show AI Summary
 				</button>
 			</div>
+			<p class="text-xs font-mono text-neutral-500">Last updated: {summaryUpdatedAt.toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' })}</p>
 		</div>
 	</section>
 
-	<section id="summary-panel" class="hidden mb-10">
-		<div class="bg-neutral-900/40 border border-neutral-800/60 rounded-xl p-6 md:p-8 prose prose-invert prose-neutral max-w-none prose-headings:text-white prose-p:text-neutral-300 prose-li:text-neutral-300 prose-strong:text-white">
-			<SummaryContent />
+	<div id="summary-modal" class="fixed inset-0 z-50 hidden" aria-hidden="true">
+		<div id="summary-backdrop" class="absolute inset-0 bg-black/70 backdrop-blur-sm opacity-0 transition-opacity duration-300"></div>
+		<div class="relative min-h-screen flex items-center justify-center p-4 md:p-8">
+			<section id="summary-dialog" class="w-full max-w-3xl max-h-[85vh] overflow-y-auto rounded-2xl border border-neutral-800/70 bg-neutral-950/95 shadow-2xl shadow-black/60 opacity-0 scale-95 translate-y-4 transition-all duration-300">
+				<div class="sticky top-0 z-10 flex items-start justify-between gap-4 border-b border-neutral-800/70 bg-neutral-950/95 px-6 py-5 rounded-t-2xl">
+					<div>
+						<h2 class="text-xl font-semibold text-white">AI Summary</h2>
+						<p class="text-sm text-neutral-400">A high-level synthesis of the current SWE + AI news set.</p>
+						<p class="text-xs font-mono text-neutral-500 mt-2">Last updated: {summaryUpdatedAt.toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' })}</p>
+					</div>
+					<button id="close-summary-btn" class="shrink-0 px-3 py-2 text-xs font-mono rounded-md border border-neutral-700 bg-neutral-900 text-neutral-300 hover:bg-neutral-800 transition-colors">
+						Close
+					</button>
+				</div>
+				<div class="p-6 md:p-8 prose prose-invert prose-neutral max-w-none prose-headings:text-white prose-p:text-neutral-300 prose-li:text-neutral-300 prose-strong:text-white">
+					<SummaryContent />
+				</div>
+			</section>
 		</div>
-	</section>
+	</div>
 	
-	<!-- Tags filter -->
 	<section class="mb-10">
 		<div class="flex flex-wrap items-center justify-between mb-4 gap-4">
 			<div class="flex items-center gap-3">
@@ -79,32 +99,32 @@ const formatDate = (date: Date) => {
 		<div class="space-y-6">
 			{allNews.map((news) => (
 				<article class="group news-item bg-neutral-900/40 border border-neutral-800/60 rounded-xl p-6 hover:bg-neutral-900 transition-all hover:border-neutral-700 hover:shadow-lg hover:shadow-black/50 relative overflow-hidden" data-tags={news.data.tags.join(',')}>
-                    <div class="absolute inset-0 bg-gradient-to-r from-blue-500/0 via-blue-500/0 to-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+					<div class="absolute inset-0 bg-gradient-to-r from-blue-500/0 via-blue-500/0 to-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
 
 					<div class="flex flex-col gap-4">
-                        <header>
-                            <div class="flex flex-wrap items-center gap-x-4 gap-y-2 mb-3">
-                                <time class="text-xs font-mono text-neutral-500 flex items-center gap-1.5">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-                                    {formatDate(news.data.pubDate)}
-                                </time>
-                                <div class="flex flex-wrap gap-1.5">
-                                    {news.data.tags.map(tag => (
-                                        <a href={`${import.meta.env.BASE_URL}?tag=${tag}`} class="text-[10px] font-mono tracking-wider px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 transition-colors border border-blue-500/20">
-                                            {tag}
-                                        </a>
-                                    ))}
-                                </div>
-                            </div>
-                            
-                            <h3 class="text-xl md:text-2xl font-bold leading-tight">
-                                <a href={news.data.sourceUrl} target="_blank" rel="noopener noreferrer" class="text-white hover:text-blue-400 transition-colors flex items-center gap-2 group/link">
-                                    <span>{news.data.title}</span>
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 opacity-0 -ml-4 group-hover/link:opacity-100 group-hover/link:ml-0 transition-all text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
-                                </a>
-                            </h3>
-                        </header>
-						
+						<header>
+							<div class="flex flex-wrap items-center gap-x-4 gap-y-2 mb-3">
+								<time class="text-xs font-mono text-neutral-500 flex items-center gap-1.5">
+									<svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+									{formatDate(news.data.pubDate)}
+								</time>
+								<div class="flex flex-wrap gap-1.5">
+									{news.data.tags.map(tag => (
+										<a href={`${import.meta.env.BASE_URL}?tag=${tag}`} class="text-[10px] font-mono tracking-wider px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 transition-colors border border-blue-500/20">
+											{tag}
+										</a>
+									))}
+								</div>
+							</div>
+
+							<h3 class="text-xl md:text-2xl font-bold leading-tight">
+								<a href={news.data.sourceUrl} target="_blank" rel="noopener noreferrer" class="text-white hover:text-blue-400 transition-colors flex items-center gap-2 group/link">
+									<span>{news.data.title}</span>
+									<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 opacity-0 -ml-4 group-hover/link:opacity-100 group-hover/link:ml-0 transition-all text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+								</a>
+							</h3>
+						</header>
+
 						<p class="text-neutral-400 leading-relaxed text-sm md:text-base">
 							{news.data.summary}
 						</p>
@@ -114,9 +134,9 @@ const formatDate = (date: Date) => {
 
 			{allNews.length === 0 && (
 				<div class="text-center py-24 bg-neutral-900/30 rounded-xl border border-neutral-800 border-dashed">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 md:w-16 md:h-16 text-neutral-600 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9.5a2 2 0 00-.586-1.414l-4.5-4.5A2 2 0 0012.586 3H12" /></svg>
+					<svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 md:w-16 md:h-16 text-neutral-600 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9.5a2 2 0 00-.586-1.414l-4.5-4.5A2 2 0 0012.586 3H12" /></svg>
 					<h3 class="text-xl font-medium text-neutral-300 mb-2">No intelligence found.</h3>
-                    <p class="text-neutral-500 font-mono text-sm">The collection database is currently empty.</p>
+					<p class="text-neutral-500 font-mono text-sm">The collection database is currently empty.</p>
 				</div>
 			)}
 		</div>
@@ -130,38 +150,56 @@ const formatDate = (date: Date) => {
 		const activePage = parseInt(params.get('page') || '1', 10);
 		const ITEMS_PER_PAGE = 20;
 
-		const newsItems = Array.from(document.querySelectorAll('.news-item')) as HTMLElement[];
+		const newsItems = Array.from(document.querySelectorAll('.news-item'));
 		let filteredItems = newsItems;
 		const clearBtn = document.getElementById('clear-filter-btn');
-		const summaryPanel = document.getElementById('summary-panel');
-		const summaryBtn = document.getElementById('toggle-summary-btn');
 
-		if (summaryPanel && summaryBtn) {
-			summaryBtn.addEventListener('click', () => {
-				const isHidden = summaryPanel.classList.contains('hidden');
-				summaryPanel.classList.toggle('hidden');
-				summaryBtn.textContent = isHidden ? 'Hide AI Summary' : 'Show AI Summary';
-				if (isHidden) {
-					summaryPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
-				}
+		const summaryModal = document.getElementById('summary-modal');
+		const summaryBackdrop = document.getElementById('summary-backdrop');
+		const summaryDialog = document.getElementById('summary-dialog');
+		const openSummaryBtn = document.getElementById('open-summary-btn');
+		const closeSummaryBtn = document.getElementById('close-summary-btn');
+
+		const openSummary = () => {
+			if (!summaryModal || !summaryBackdrop || !summaryDialog) return;
+			summaryModal.classList.remove('hidden');
+			requestAnimationFrame(() => {
+				summaryBackdrop.classList.remove('opacity-0');
+				summaryDialog.classList.remove('opacity-0', 'scale-95', 'translate-y-4');
 			});
-		}
+			document.body.classList.add('overflow-hidden');
+		};
+
+		const closeSummary = () => {
+			if (!summaryModal || !summaryBackdrop || !summaryDialog) return;
+			summaryBackdrop.classList.add('opacity-0');
+			summaryDialog.classList.add('opacity-0', 'scale-95', 'translate-y-4');
+			setTimeout(() => {
+				summaryModal.classList.add('hidden');
+			}, 300);
+			document.body.classList.remove('overflow-hidden');
+		};
+
+		openSummaryBtn?.addEventListener('click', openSummary);
+		closeSummaryBtn?.addEventListener('click', closeSummary);
+		summaryBackdrop?.addEventListener('click', closeSummary);
+		document.addEventListener('keydown', (event) => {
+			if (event.key === 'Escape') closeSummary();
+		});
 
 		if (activeTag) {
 			if (clearBtn) clearBtn.classList.remove('hidden');
 
-			filteredItems = newsItems.filter(el => {
+			filteredItems = newsItems.filter((el) => {
 				const tagsAttr = el.getAttribute('data-tags');
-				return tagsAttr && tagsAttr.toLowerCase().split(',').map(s => s.trim()).includes(activeTag.toLowerCase().trim());
+				return tagsAttr && tagsAttr.toLowerCase().split(',').map((s) => s.trim()).includes(activeTag.toLowerCase().trim());
 			});
 
-			newsItems.forEach(el => {
-				if (!filteredItems.includes(el)) {
-					el.style.display = 'none';
-				}
+			newsItems.forEach((el) => {
+				if (!filteredItems.includes(el)) el.style.display = 'none';
 			});
 
-			document.querySelectorAll('[data-tag-link]').forEach(link => {
+			document.querySelectorAll('[data-tag-link]').forEach((link) => {
 				const linkTag = link.getAttribute('data-tag-link');
 				if (linkTag && linkTag.toLowerCase().trim() === activeTag.toLowerCase().trim()) {
 					link.classList.remove('bg-neutral-900', 'text-neutral-400', 'border-neutral-800');
@@ -182,22 +220,18 @@ const formatDate = (date: Date) => {
 			const endIndex = startIndex + ITEMS_PER_PAGE;
 
 			filteredItems.forEach((el, index) => {
-				if (index >= startIndex && index < endIndex) {
-					el.style.display = 'block';
-				} else {
-					el.style.display = 'none';
-				}
+				el.style.display = index >= startIndex && index < endIndex ? 'block' : 'none';
 			});
 
 			const paginationContainer = document.getElementById('pagination-controls');
 			if (paginationContainer) {
 				paginationContainer.classList.remove('hidden');
 				paginationContainer.classList.add('flex');
-				
+
 				const prevDisabled = activePage <= 1;
 				const nextDisabled = activePage >= totalPages;
 
-				const createUrl = (page: number) => {
+				const createUrl = (page) => {
 					const newParams = new URLSearchParams(window.location.search);
 					newParams.set('page', page.toString());
 					return `${window.location.pathname}?${newParams.toString()}`;
@@ -208,19 +242,19 @@ const formatDate = (date: Date) => {
 						Showing ${Math.min(startIndex + 1, filteredItems.length)}-${Math.min(endIndex, filteredItems.length)} of ${filteredItems.length} intelligence logs
 					</div>
 					<div class="flex items-center gap-2">
-						<a href="${prevDisabled ? '#' : createUrl(activePage - 1)}" 
+						<a href="${prevDisabled ? '#' : createUrl(activePage - 1)}"
 						   class="px-3 py-1.5 text-xs font-mono rounded-md border border-neutral-800 ${prevDisabled ? 'opacity-50 cursor-not-allowed bg-neutral-900/50 text-neutral-600' : 'bg-neutral-900 text-neutral-400 hover:bg-neutral-800 hover:text-white'} transition-all shadow-sm">
 							Previous
 						</a>
 						<div class="flex items-center gap-1 mx-2">
 							${Array.from({ length: totalPages }, (_, i) => i + 1).map(page => `
-								<a href="${createUrl(page)}" 
+								<a href="${createUrl(page)}"
 								   class="w-7 h-7 flex items-center justify-center text-xs font-mono rounded-md border ${page === activePage ? 'bg-blue-500/10 border-blue-500/30 text-blue-400' : 'border-neutral-800 bg-neutral-900 text-neutral-400 hover:bg-neutral-800 hover:text-white'} transition-all shadow-sm">
 									${page}
 								</a>
 							`).join('')}
 						</div>
-						<a href="${nextDisabled ? '#' : createUrl(activePage + 1)}" 
+						<a href="${nextDisabled ? '#' : createUrl(activePage + 1)}"
 						   class="px-3 py-1.5 text-xs font-mono rounded-md border border-neutral-800 ${nextDisabled ? 'opacity-50 cursor-not-allowed bg-neutral-900/50 text-neutral-600' : 'bg-neutral-900 text-neutral-400 hover:bg-neutral-800 hover:text-white'} transition-all shadow-sm">
 							Next
 						</a>
@@ -228,7 +262,7 @@ const formatDate = (date: Date) => {
 				`;
 			}
 		} else {
-			filteredItems.forEach(el => {
+			filteredItems.forEach((el) => {
 				el.style.display = 'block';
 			});
 		}
