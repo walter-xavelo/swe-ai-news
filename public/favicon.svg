@@ -1,26 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
-  <defs>
-    <linearGradient id="bg" x1="10" y1="8" x2="54" y2="58" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#10131A"/>
-      <stop offset="1" stop-color="#06080D"/>
-    </linearGradient>
-    <linearGradient id="spark" x1="20" y1="12" x2="45" y2="50" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#7DD3FC"/>
-      <stop offset="0.38" stop-color="#60A5FA"/>
-      <stop offset="0.72" stop-color="#A78BFA"/>
-      <stop offset="1" stop-color="#C084FC"/>
-    </linearGradient>
-    <radialGradient id="glow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(32 31) rotate(90) scale(24)">
-      <stop stop-color="#93C5FD" stop-opacity="0.45"/>
-      <stop offset="1" stop-color="#93C5FD" stop-opacity="0"/>
-    </radialGradient>
-  </defs>
-
-  <rect x="4" y="4" width="56" height="56" rx="16" fill="url(#bg)"/>
-  <rect x="4.5" y="4.5" width="55" height="55" rx="15.5" stroke="#272A33"/>
-  <circle cx="32" cy="32" r="18" fill="url(#glow)"/>
-
-  <path d="M32 12.5L35.8 26.2L49.5 30L35.8 33.8L32 47.5L28.2 33.8L14.5 30L28.2 26.2L32 12.5Z" fill="url(#spark)"/>
-  <path d="M46.5 14.5L48 20L53.5 21.5L48 23L46.5 28.5L45 23L39.5 21.5L45 20L46.5 14.5Z" fill="#E0E7FF" fill-opacity="0.95"/>
-  <path d="M18.5 39.5L19.6 43.4L23.5 44.5L19.6 45.6L18.5 49.5L17.4 45.6L13.5 44.5L17.4 43.4L18.5 39.5Z" fill="#BFDBFE" fill-opacity="0.9"/>
+  <rect width="64" height="64" rx="18" fill="#2B2029"/>
+  <circle cx="32" cy="32" r="21" fill="#F5F3F4"/>
+  <path d="M32 16C32 24.8 39.2 32 48 32C39.2 32 32 39.2 32 48C32 39.2 24.8 32 16 32C24.8 32 32 24.8 32 16Z" fill="#2F2A31"/>
 </svg>
