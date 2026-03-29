@@ -23,9 +23,19 @@ An AI Developer News aggregator featuring a retro, terminal-style user interface
    `npm install`
 2. Run the app:
    `npm run dev`
+3. Before pushing changes, verify the build:
+   `npm run build`
 
 ## Content notes
 
 - news entries live in `src/content/news/`
 - the AI summary block is defined in `src/content/summary.md`
 - the homepage automatically counts all items in the `news` collection
+- news should be capped at **3 items per day**
+
+## CI
+
+This repo now includes a GitHub Actions workflow that runs on pushes and pull requests to `main` and verifies:
+
+- dependency installation
+- production build (`npm run build`)
