@@ -2,7 +2,7 @@
 title: "This résumé hack helped a software engineer pivot from software engineering to AI"
 pubDate: 2026-03-08
 tags: ["AI", "CAREER", "ENGINEERING"]
-sourceUrl: "https://news.google.com/rss/articles/CBMilAFBVV95cUxOOGhRRURQQ29rUVZtN3hZSGdzLVlZM3BiWFZmbm9OaWVCRVAwNVNnZTBRcV8xQW0ySWpQZG9iMDlzQ0VnYjZXeDkxYkZYbldGd2FWM1p2NXVFajVaaGNhM3NBR002MXBjZ3NIY2ZnY0FNMXBZYmt4UUFjSUZLRHpPcnU3dHFXWDExRllPY3VfaTJPXzBf?oc=5"
+sourceUrl: "https://www.businessinsider.com/resume-hack-helped-software-engineer-pivot-to-ai-1"
 summary: "Business Insider spotlighted how engineers were already reshaping their résumés and positioning to move from conventional software roles into more explicitly AI-focused work."
 ---
 
