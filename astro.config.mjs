@@ -6,7 +6,7 @@ import tailwindcss from '@tailwindcss/vite';
 // https://astro.build/config
 export default defineConfig({
   site: 'https://walter-xavelo.github.io',
-  base: '/swe_ai_news/',
+  base: '/swe-ai-news/',
   integrations: [mdx()],
 
   typescript: {
