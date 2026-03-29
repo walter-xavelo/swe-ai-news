@@ -51,11 +51,6 @@ const summaryThemes = [
 	},
 ];
 
-const summaryWatchlist = [
-	'Multi-agent command centers and plugin ecosystems',
-	'Execution controls and permission-aware automation',
-	'Security and software supply-chain safeguards',
-];
 ---
 
 <Layout title="SWE AI Dev News">
@@ -77,15 +72,14 @@ const summaryWatchlist = [
 	<div id="summary-modal" class="fixed inset-0 z-50 hidden" aria-hidden="true">
 		<div id="summary-backdrop" class="absolute inset-0 bg-black/75 backdrop-blur-md opacity-0 transition-opacity duration-300"></div>
 		<div class="relative min-h-screen flex items-center justify-center p-4 md:p-8">
-			<section id="summary-dialog" class="w-full max-w-5xl rounded-3xl border border-neutral-800/80 bg-gradient-to-b from-neutral-950 via-neutral-950 to-neutral-900 shadow-2xl shadow-black/70 opacity-0 scale-95 translate-y-4 transition-all duration-300">
-				<div class="rounded-t-3xl border-b border-neutral-800/70 bg-neutral-950/90 px-6 py-5 md:px-8 md:py-6">
+			<section id="summary-dialog" class="w-full max-w-7xl rounded-3xl border border-neutral-800/80 bg-gradient-to-b from-neutral-950 via-neutral-950 to-neutral-900 shadow-2xl shadow-black/70 opacity-0 scale-95 translate-y-4 transition-all duration-300">
+				<div class="rounded-t-3xl border-b border-neutral-800/70 bg-neutral-950/90 px-5 py-4 md:px-6 md:py-5">
 					<div class="flex items-start justify-between gap-4">
-						<div class="max-w-3xl">
+						<div class="flex-1 pr-4">
 							<div class="mb-3 inline-flex items-center rounded-full border border-blue-500/20 bg-blue-500/10 px-3 py-1 text-[11px] font-mono uppercase tracking-[0.18em] text-blue-400">
 								AI Summary
 							</div>
-							<h2 class="text-2xl font-semibold tracking-tight text-white md:text-3xl">Where AI in software engineering is heading</h2>
-							<p class="mt-3 max-w-2xl text-base leading-7 text-neutral-300 md:text-lg">
+							<p class="text-lg leading-7 text-neutral-200 md:text-xl md:leading-8">
 								The center of gravity is shifting from <span class="text-white font-semibold">AI that helps write code</span> to <span class="text-white font-semibold">AI that helps supervise, execute, and coordinate software work safely</span>.
 							</p>
 						</div>
@@ -99,52 +93,39 @@ const summaryWatchlist = [
 						<span class="rounded-full border border-neutral-800 bg-neutral-900/70 px-3 py-1">4 market themes</span>
 					</div>
 				</div>
-				<div class="px-6 py-6 md:px-8 md:py-8">
-					<div class="grid gap-5 lg:grid-cols-[1.25fr_0.95fr]">
-						<div class="space-y-5">
-							<div class="rounded-2xl border border-neutral-800/70 bg-black/25 p-5 md:p-6">
-								<div class="mb-4 text-[11px] font-mono uppercase tracking-[0.18em] text-blue-400">Executive takeaway</div>
-								<p class="text-lg leading-8 text-neutral-200 md:text-xl">
-									AI in SWE is increasingly about <span class="font-semibold text-white">trusted execution</span>, <span class="font-semibold text-white">workflow coordination</span>, and <span class="font-semibold text-white">measurable productivity</span> — not just faster code generation.
-								</p>
-							</div>
-							<div class="rounded-2xl border border-neutral-800/70 bg-black/25 p-5 md:p-6">
-								<div class="mb-4 text-[11px] font-mono uppercase tracking-[0.18em] text-blue-400">What stands out now</div>
-								<ul class="space-y-3">
-									{summarySignals.map((signal) => (
-										<li class="flex gap-3 text-sm leading-6 text-neutral-300 md:text-base">
-											<span class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-blue-400"></span>
-											<span>{signal}</span>
-										</li>
-									))}
-								</ul>
-							</div>
+				<div class="px-5 py-5 md:px-6 md:py-6 flex flex-col gap-4">
+					<div class="rounded-2xl border border-neutral-800/70 bg-black/25 p-4 md:p-5">
+						<div class="mb-3 text-[11px] font-mono uppercase tracking-[0.18em] text-blue-400">Executive takeaway</div>
+						<p class="text-base leading-7 text-neutral-200 md:text-lg md:leading-8">
+							AI in SWE is increasingly about <span class="font-semibold text-white">trusted execution</span>, <span class="font-semibold text-white">workflow coordination</span>, and <span class="font-semibold text-white">measurable productivity</span> — not just faster code generation.
+						</p>
+					</div>
+					
+					<div class="grid gap-4 lg:grid-cols-[1fr_1.5fr]">
+						<div class="rounded-2xl border border-neutral-800/70 bg-black/25 p-4 md:p-5">
+							<div class="mb-3 text-[11px] font-mono uppercase tracking-[0.18em] text-blue-400">What stands out now</div>
+							<ul class="space-y-2 md:space-y-3">
+								{summarySignals.map((signal) => (
+									<li class="flex gap-3 text-sm leading-6 text-neutral-300 md:text-base">
+										<span class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-blue-400"></span>
+										<span>{signal}</span>
+									</li>
+								))}
+							</ul>
 						</div>
-						<div class="space-y-5">
-							<div class="rounded-2xl border border-neutral-800/70 bg-black/25 p-5 md:p-6">
-								<div class="mb-4 text-[11px] font-mono uppercase tracking-[0.18em] text-blue-400">Current themes</div>
-								<div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
-									{summaryThemes.map((theme) => (
-										<div class="rounded-xl border border-neutral-800 bg-neutral-950/80 p-4">
-											<h3 class="text-sm font-semibold text-white">{theme.title}</h3>
-											<p class="mt-2 text-sm leading-6 text-neutral-400">{theme.body}</p>
-										</div>
-									))}
-								</div>
-							</div>
-							<div class="rounded-2xl border border-neutral-800/70 bg-black/25 p-5 md:p-6">
-								<div class="mb-4 text-[11px] font-mono uppercase tracking-[0.18em] text-blue-400">Watchlist</div>
-								<ul class="space-y-3 text-sm leading-6 text-neutral-300">
-									{summaryWatchlist.map((item) => (
-										<li class="flex gap-3">
-											<span class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-violet-400"></span>
-											<span>{item}</span>
-										</li>
-									))}
-								</ul>
+						<div class="rounded-2xl border border-neutral-800/70 bg-black/25 p-4 md:p-5">
+							<div class="mb-3 text-[11px] font-mono uppercase tracking-[0.18em] text-blue-400">Current themes</div>
+							<div class="grid gap-3 sm:grid-cols-2">
+								{summaryThemes.map((theme) => (
+									<div class="rounded-xl border border-neutral-800 bg-neutral-950/80 p-3 md:p-4">
+										<h3 class="text-xs md:text-sm font-semibold text-white">{theme.title}</h3>
+										<p class="mt-1.5 text-xs md:text-sm leading-5 md:leading-6 text-neutral-400">{theme.body}</p>
+									</div>
+								))}
 							</div>
 						</div>
 					</div>
+
 				</div>
 			</section>
 		</div>
