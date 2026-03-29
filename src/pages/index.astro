@@ -25,33 +25,20 @@ const formatDate = (date: Date) => {
 ---
 
 <Layout title="SWE AI Dev News">
-	<section class="mb-10 grid gap-4 md:grid-cols-[1.1fr_0.9fr]">
-		<div class="bg-neutral-900/40 border border-neutral-800/60 rounded-xl p-6">
-			<div class="flex items-center gap-3 mb-3">
-				<div class="w-10 h-10 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 font-mono text-sm">{totalNewsCount}</div>
-				<div>
-					<h2 class="text-lg font-semibold text-white">News Counter</h2>
-					<p class="text-sm text-neutral-400">Currently tracking {totalNewsCount} published items.</p>
-				</div>
+	<Fragment slot="header-extra">
+		<div class="flex flex-wrap items-center gap-3 lg:justify-end">
+			<div class="inline-flex items-center gap-2 rounded-md border border-neutral-800 bg-neutral-900/70 px-3 py-2 text-xs font-mono text-neutral-300 shadow-sm">
+				<span class="inline-flex h-7 min-w-7 items-center justify-center rounded-md border border-blue-500/20 bg-blue-500/10 px-2 text-blue-400">{totalNewsCount}</span>
+				<span>{totalNewsCount} news items</span>
 			</div>
-			<p class="text-sm text-neutral-500 leading-relaxed">
-				Use the filters below to narrow the feed by topic, or open the AI summary for a quick synthesis of the current themes.
-			</p>
-		</div>
-
-		<div class="bg-neutral-900/40 border border-neutral-800/60 rounded-xl p-6">
-			<div class="flex items-center justify-between gap-4 mb-3">
-				<div>
-					<h2 class="text-lg font-semibold text-white">AI Summary</h2>
-					<p class="text-sm text-neutral-400">A concise overview defined in <code class="font-mono text-xs text-blue-400">summary.md</code>.</p>
-				</div>
-				<button id="open-summary-btn" class="px-3 py-2 text-xs font-mono rounded-md border border-blue-500/30 bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 transition-all shadow-sm">
-					Show AI Summary
-				</button>
+			<div class="hidden md:inline-flex items-center rounded-md border border-neutral-800 bg-neutral-900/70 px-3 py-2 text-xs font-mono text-neutral-500 shadow-sm">
+				Updated {summaryUpdatedAt.toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' })}
 			</div>
-			<p class="text-xs font-mono text-neutral-500">Last updated: {summaryUpdatedAt.toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' })}</p>
+			<button id="open-summary-btn" class="inline-flex items-center rounded-md border border-blue-500/30 bg-blue-500/10 px-3 py-2 text-xs font-mono text-blue-400 shadow-sm transition-all hover:bg-blue-500/20">
+				Show AI Summary
+			</button>
 		</div>
-	</section>
+	</Fragment>
 
 	<div id="summary-modal" class="fixed inset-0 z-50 hidden" aria-hidden="true">
 		<div id="summary-backdrop" class="absolute inset-0 bg-black/70 backdrop-blur-sm opacity-0 transition-opacity duration-300"></div>
