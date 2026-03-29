@@ -3,7 +3,6 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
-import SummaryContent from '../content/summary.md';
 
 const allNews = (await getCollection('news')).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
@@ -26,6 +25,37 @@ const formatDate = (date: Date) => {
 const formatSourceDomain = (sourceUrl: string) => {
 	return new URL(sourceUrl).hostname.replace(/^www\./, '');
 };
+
+const summarySignals = [
+	'AI coding tools are becoming orchestration systems, not just autocomplete layers.',
+	'Safety, permissions, and trust are now product features, not compliance afterthoughts.',
+	'Buyers increasingly want measurable workflow impact instead of flashy demos.',
+];
+
+const summaryThemes = [
+	{
+		title: 'Assistant → Agent',
+		body: 'The market is shifting from “help me write code” toward tools that can supervise, execute, and coordinate engineering work.',
+	},
+	{
+		title: 'Trust as a feature',
+		body: 'Permission systems, grounded execution, and controlled autonomy are becoming core differentiators.',
+	},
+	{
+		title: 'Enterprise reality',
+		body: 'Evaluation is moving toward governance, workflow fit, and provable productivity gains.',
+	},
+	{
+		title: 'Beyond code generation',
+		body: 'Triage, CI/CD, execution control, and engineering ops are now part of the AI tooling story.',
+	},
+];
+
+const summaryWatchlist = [
+	'Multi-agent command centers and plugin ecosystems',
+	'Execution controls and permission-aware automation',
+	'Security and software supply-chain safeguards',
+];
 ---
 
 <Layout title="SWE AI Dev News">
@@ -47,15 +77,17 @@ const formatSourceDomain = (sourceUrl: string) => {
 	<div id="summary-modal" class="fixed inset-0 z-50 hidden" aria-hidden="true">
 		<div id="summary-backdrop" class="absolute inset-0 bg-black/75 backdrop-blur-md opacity-0 transition-opacity duration-300"></div>
 		<div class="relative min-h-screen flex items-center justify-center p-4 md:p-8">
-			<section id="summary-dialog" class="w-full max-w-4xl max-h-[88vh] overflow-y-auto rounded-3xl border border-neutral-800/80 bg-gradient-to-b from-neutral-950 via-neutral-950 to-neutral-900 shadow-2xl shadow-black/70 opacity-0 scale-95 translate-y-4 transition-all duration-300">
-				<div class="sticky top-0 z-10 rounded-t-3xl border-b border-neutral-800/70 bg-neutral-950/90 px-6 py-5 backdrop-blur-md md:px-8 md:py-6">
+			<section id="summary-dialog" class="w-full max-w-5xl rounded-3xl border border-neutral-800/80 bg-gradient-to-b from-neutral-950 via-neutral-950 to-neutral-900 shadow-2xl shadow-black/70 opacity-0 scale-95 translate-y-4 transition-all duration-300">
+				<div class="rounded-t-3xl border-b border-neutral-800/70 bg-neutral-950/90 px-6 py-5 md:px-8 md:py-6">
 					<div class="flex items-start justify-between gap-4">
-						<div class="max-w-2xl">
+						<div class="max-w-3xl">
 							<div class="mb-3 inline-flex items-center rounded-full border border-blue-500/20 bg-blue-500/10 px-3 py-1 text-[11px] font-mono uppercase tracking-[0.18em] text-blue-400">
 								AI Summary
 							</div>
 							<h2 class="text-2xl font-semibold tracking-tight text-white md:text-3xl">Where AI in software engineering is heading</h2>
-							<p class="mt-2 text-sm leading-6 text-neutral-400 md:text-base">A concise editorial synthesis of the most relevant themes across the current SWE + AI news set.</p>
+							<p class="mt-3 max-w-2xl text-base leading-7 text-neutral-300 md:text-lg">
+								The center of gravity is shifting from <span class="text-white font-semibold">AI that helps write code</span> to <span class="text-white font-semibold">AI that helps supervise, execute, and coordinate software work safely</span>.
+							</p>
 						</div>
 						<button id="close-summary-btn" class="shrink-0 rounded-xl border border-neutral-700 bg-neutral-900/80 px-4 py-2 text-xs font-mono text-neutral-300 transition-colors hover:bg-neutral-800 hover:text-white">
 							Close
@@ -63,12 +95,55 @@ const formatSourceDomain = (sourceUrl: string) => {
 					</div>
 					<div class="mt-4 flex flex-wrap items-center gap-3 text-xs font-mono text-neutral-500">
 						<span class="rounded-full border border-neutral-800 bg-neutral-900/70 px-3 py-1">Updated {summaryUpdatedAt.toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' })}</span>
-						<span class="rounded-full border border-neutral-800 bg-neutral-900/70 px-3 py-1">Source: <code>src/content/summary.md</code></span>
+						<span class="rounded-full border border-neutral-800 bg-neutral-900/70 px-3 py-1">3 key signals</span>
+						<span class="rounded-full border border-neutral-800 bg-neutral-900/70 px-3 py-1">4 market themes</span>
 					</div>
 				</div>
 				<div class="px-6 py-6 md:px-8 md:py-8">
-					<div class="rounded-2xl border border-neutral-800/70 bg-black/20 p-6 md:p-8 prose prose-invert prose-neutral max-w-none prose-headings:mb-3 prose-headings:mt-8 prose-headings:text-white prose-h2:text-xl prose-h2:tracking-tight prose-h3:text-lg prose-h3:text-neutral-100 prose-p:text-[17px] prose-p:leading-8 prose-p:text-neutral-300 prose-strong:text-white prose-li:text-neutral-300 prose-li:marker:text-blue-400 prose-ul:space-y-2 prose-ol:space-y-3 first:prose-p:mt-0">
-						<SummaryContent />
+					<div class="grid gap-5 lg:grid-cols-[1.25fr_0.95fr]">
+						<div class="space-y-5">
+							<div class="rounded-2xl border border-neutral-800/70 bg-black/25 p-5 md:p-6">
+								<div class="mb-4 text-[11px] font-mono uppercase tracking-[0.18em] text-blue-400">Executive takeaway</div>
+								<p class="text-lg leading-8 text-neutral-200 md:text-xl">
+									AI in SWE is increasingly about <span class="font-semibold text-white">trusted execution</span>, <span class="font-semibold text-white">workflow coordination</span>, and <span class="font-semibold text-white">measurable productivity</span> — not just faster code generation.
+								</p>
+							</div>
+							<div class="rounded-2xl border border-neutral-800/70 bg-black/25 p-5 md:p-6">
+								<div class="mb-4 text-[11px] font-mono uppercase tracking-[0.18em] text-blue-400">What stands out now</div>
+								<ul class="space-y-3">
+									{summarySignals.map((signal) => (
+										<li class="flex gap-3 text-sm leading-6 text-neutral-300 md:text-base">
+											<span class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-blue-400"></span>
+											<span>{signal}</span>
+										</li>
+									))}
+								</ul>
+							</div>
+						</div>
+						<div class="space-y-5">
+							<div class="rounded-2xl border border-neutral-800/70 bg-black/25 p-5 md:p-6">
+								<div class="mb-4 text-[11px] font-mono uppercase tracking-[0.18em] text-blue-400">Current themes</div>
+								<div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
+									{summaryThemes.map((theme) => (
+										<div class="rounded-xl border border-neutral-800 bg-neutral-950/80 p-4">
+											<h3 class="text-sm font-semibold text-white">{theme.title}</h3>
+											<p class="mt-2 text-sm leading-6 text-neutral-400">{theme.body}</p>
+										</div>
+									))}
+								</div>
+							</div>
+							<div class="rounded-2xl border border-neutral-800/70 bg-black/25 p-5 md:p-6">
+								<div class="mb-4 text-[11px] font-mono uppercase tracking-[0.18em] text-blue-400">Watchlist</div>
+								<ul class="space-y-3 text-sm leading-6 text-neutral-300">
+									{summaryWatchlist.map((item) => (
+										<li class="flex gap-3">
+											<span class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-violet-400"></span>
+											<span>{item}</span>
+										</li>
+									))}
+								</ul>
+							</div>
+						</div>
 					</div>
 				</div>
 			</section>
