@@ -132,52 +132,48 @@ const summaryThemes = [
 	</div>
 	
 	<section class="mb-10">
-		<div class="rounded-2xl border border-neutral-800/70 bg-neutral-900/40 shadow-sm overflow-hidden">
-			<div class="flex flex-col gap-4 border-b border-neutral-800/70 px-4 py-4 sm:px-5">
-				<div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-					<div class="flex items-start gap-3">
-						<div class="mt-0.5 rounded-xl border border-neutral-800 bg-neutral-950/80 p-2 text-neutral-500">
-							<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" /></svg>
-						</div>
-						<div>
-							<h2 class="text-xs font-mono uppercase tracking-[0.2em] text-neutral-400">Filter by Topic</h2>
-							<p class="mt-1 text-sm text-neutral-500">Browse <span class="font-mono text-neutral-300">{allTags.length}</span> topic tags without crowding the page.</p>
-						</div>
+		<details id="topic-filter" class="group overflow-hidden rounded-2xl border border-neutral-800/70 bg-neutral-900/40 shadow-sm">
+			<summary class="flex cursor-pointer list-none flex-col gap-4 px-4 py-4 text-left marker:hidden sm:px-5 md:flex-row md:items-start md:justify-between">
+				<div class="flex items-start gap-3">
+					<div class="mt-0.5 rounded-xl border border-neutral-800 bg-neutral-950/80 p-2 text-neutral-500 transition-colors group-open:border-blue-500/30 group-open:bg-blue-500/10 group-open:text-blue-400">
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" /></svg>
 					</div>
-					<div class="flex flex-wrap items-center gap-2">
-						<span id="topic-filter-active-pill" class="hidden rounded-full border border-blue-500/20 bg-blue-500/10 px-3 py-1 text-[11px] font-mono uppercase tracking-[0.18em] text-blue-400"></span>
-						<a href={import.meta.env.BASE_URL} id="clear-filter-btn" class="hidden text-xs font-mono text-orange-400 hover:text-orange-300 flex items-center gap-1.5 transition-colors border border-orange-500/30 bg-orange-500/10 px-2.5 py-1.5 rounded-md shadow-sm">
-							<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" /></svg>
-							Clear Filter
-						</a>
+					<div>
+						<p class="text-sm font-medium text-neutral-200">Topic filters</p>
+						<p class="mt-1 text-xs font-mono text-neutral-500">Pick up to 3 topics to narrow the stream. The filter closes after each selection so the news stays in view.</p>
+						<div id="topic-filter-selected" class="mt-3 hidden flex-wrap gap-2" aria-live="polite"></div>
 					</div>
 				</div>
-				<details id="topic-filter" class="group rounded-xl border border-neutral-800/80 bg-black/20">
-					<summary class="flex cursor-pointer list-none flex-col gap-3 px-4 py-3 text-left marker:hidden sm:flex-row sm:items-center sm:justify-between">
-						<div>
-							<p class="text-sm font-medium text-neutral-200">Topic filters</p>
-							<p class="mt-1 text-xs font-mono text-neutral-500">Expand to jump directly into a topic or narrow the news stream.</p>
-						</div>
-						<div class="inline-flex items-center gap-2 self-start rounded-md border border-neutral-800 bg-neutral-950/80 px-3 py-2 text-xs font-mono text-neutral-300 transition-colors group-open:border-blue-500/30 group-open:bg-blue-500/10 group-open:text-blue-400 sm:self-auto">
-							<span id="topic-filter-summary-label">Show topics</span>
-							<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform duration-200 group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-							</svg>
-						</div>
-					</summary>
-					<div id="topic-filter-panel" class="border-t border-neutral-800/70 px-4 py-4">
-						<div class="flex flex-wrap gap-2">
-							<a href={import.meta.env.BASE_URL} class="px-3 py-1.5 text-xs font-mono rounded-md border border-neutral-800 bg-neutral-900 text-neutral-400 hover:bg-neutral-800 hover:text-white transition-all shadow-sm" data-filter="all">All Topics</a>
-							{allTags.map((tag) => (
-								<a href={`${import.meta.env.BASE_URL}?tag=${tag}`} class="px-3 py-1.5 text-xs font-mono rounded-md border border-neutral-800 bg-neutral-900 text-neutral-400 hover:bg-neutral-800 hover:text-white transition-all shadow-sm" data-tag-link={tag}>
-									{tag}
-								</a>
-							))}
-						</div>
+				<div class="flex flex-wrap items-center gap-2 md:justify-end">
+					<span id="topic-filter-count" class="rounded-full border border-neutral-800 bg-neutral-950/80 px-3 py-1 text-[11px] font-mono uppercase tracking-[0.18em] text-neutral-400">0/3 selected</span>
+					<span class="inline-flex items-center gap-2 self-start rounded-md border border-neutral-800 bg-neutral-950/80 px-3 py-2 text-xs font-mono text-neutral-300 transition-colors group-open:border-blue-500/30 group-open:bg-blue-500/10 group-open:text-blue-400 sm:self-auto">
+						<span id="topic-filter-summary-label">Show topics</span>
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform duration-200 group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+						</svg>
+					</span>
+				</div>
+			</summary>
+			<div id="topic-filter-panel" class="border-t border-neutral-800/70 px-4 py-4 sm:px-5">
+				<div class="flex flex-col gap-4">
+					<div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+						<p class="text-xs font-mono text-neutral-500">Select up to three topics. Stories matching any selected topic will stay visible.</p>
+						<button type="button" id="clear-filter-btn" class="hidden w-full sm:w-auto text-xs font-mono text-orange-400 hover:text-orange-300 flex items-center justify-center gap-1.5 transition-colors border border-orange-500/30 bg-orange-500/10 px-2.5 py-1.5 rounded-md shadow-sm disabled:cursor-not-allowed disabled:opacity-50">
+							<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" /></svg>
+							Clear filters
+						</button>
 					</div>
-				</details>
+					<div class="flex flex-wrap gap-2" role="group" aria-label="Topic filters">
+						<button type="button" class="px-3 py-1.5 text-xs font-mono rounded-md border border-neutral-800 bg-neutral-900 text-neutral-400 hover:bg-neutral-800 hover:text-white transition-all shadow-sm" data-filter="all">All Topics</button>
+						{allTags.map((tag) => (
+							<button type="button" class="px-3 py-1.5 text-xs font-mono rounded-md border border-neutral-800 bg-neutral-900 text-neutral-400 hover:bg-neutral-800 hover:text-white transition-all shadow-sm disabled:cursor-not-allowed disabled:opacity-45" data-tag-button={tag} aria-pressed="false">
+								{tag}
+							</button>
+						))}
+					</div>
+				</div>
 			</div>
-		</div>
+		</details>
 	</section>
 
 	<section>
@@ -203,7 +199,7 @@ const summaryThemes = [
 								</a>
 								<div class="flex flex-wrap gap-1.5">
 									{news.data.tags.map(tag => (
-										<a href={`${import.meta.env.BASE_URL}?tag=${tag}`} class="text-[10px] font-mono tracking-wider px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 transition-colors border border-blue-500/20">
+										<a href={`${import.meta.env.BASE_URL}?tags=${encodeURIComponent(tag)}`} class="text-[10px] font-mono tracking-wider px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 transition-colors border border-blue-500/20">
 											{tag}
 										</a>
 									))}
@@ -239,21 +235,47 @@ const summaryThemes = [
 
 	<script>
 		const params = new URLSearchParams(window.location.search);
-		const activeTag = params.get('tag');
-		const activePage = parseInt(params.get('page') || '1', 10);
+		const initialPage = parseInt(params.get('page') || '1', 10);
 		const ITEMS_PER_PAGE = 20;
+		const MAX_SELECTED_TOPICS = 3;
 
+		const normalizeTag = (tag) => tag.toLowerCase().trim();
+		const selectedTopicsFromUrl = [
+			...params.getAll('tags').flatMap((value) => value.split(',')),
+			...((params.get('tag') || '').split(',')),
+		]
+			.map((tag) => tag.trim())
+			.filter(Boolean)
+			.filter((tag, index, list) => list.findIndex((entry) => normalizeTag(entry) === normalizeTag(tag)) === index)
+			.slice(0, MAX_SELECTED_TOPICS);
+
+		let selectedTopics = selectedTopicsFromUrl;
+		let currentPage = initialPage;
 		const newsItems = Array.from(document.querySelectorAll('.news-item'));
 		let filteredItems = newsItems;
 		const clearBtn = document.getElementById('clear-filter-btn');
 		const topicFilter = document.getElementById('topic-filter');
 		const topicFilterSummaryLabel = document.getElementById('topic-filter-summary-label');
-		const topicFilterActivePill = document.getElementById('topic-filter-active-pill');
-		const normalizedActiveTag = activeTag?.toLowerCase().trim();
+		const topicFilterCount = document.getElementById('topic-filter-count');
+		const topicFilterSelected = document.getElementById('topic-filter-selected');
+		const topicButtons = Array.from(document.querySelectorAll('[data-tag-button]'));
+		const allTopicsButton = document.querySelector('[data-filter="all"]');
 
 		const updateTopicFilterSummary = () => {
 			if (!(topicFilter instanceof HTMLDetailsElement) || !topicFilterSummaryLabel) return;
-			topicFilterSummaryLabel.textContent = topicFilter.open ? 'Hide topics' : 'Show topics';
+			if (topicFilter.open) {
+				topicFilterSummaryLabel.textContent = 'Hide topics';
+				return;
+			}
+
+			if (!selectedTopics.length) {
+				topicFilterSummaryLabel.textContent = 'Show topics';
+				return;
+			}
+
+			topicFilterSummaryLabel.textContent = selectedTopics.length === 1
+				? `1 topic selected`
+				: `${selectedTopics.length} topics selected`;
 		};
 
 		const summaryModal = document.getElementById('summary-modal');
@@ -261,6 +283,155 @@ const summaryThemes = [
 		const summaryDialog = document.getElementById('summary-dialog');
 		const openSummaryBtn = document.getElementById('open-summary-btn');
 		const closeSummaryBtn = document.getElementById('close-summary-btn');
+		const paginationContainer = document.getElementById('pagination-controls');
+
+		const syncQueryString = (page = 1) => {
+			const nextParams = new URLSearchParams();
+			if (selectedTopics.length) {
+				nextParams.set('tags', selectedTopics.join(','));
+			}
+			if (page > 1) {
+				nextParams.set('page', page.toString());
+			}
+			const nextUrl = `${window.location.pathname}${nextParams.toString() ? `?${nextParams.toString()}` : ''}`;
+			window.history.replaceState({}, '', nextUrl);
+		};
+
+		const renderSelectedTopics = () => {
+			if (!topicFilterSelected) return;
+			if (!selectedTopics.length) {
+				topicFilterSelected.innerHTML = '';
+				topicFilterSelected.classList.add('hidden');
+				return;
+			}
+
+			topicFilterSelected.classList.remove('hidden');
+			topicFilterSelected.innerHTML = selectedTopics.map((topic) => `
+				<span class="inline-flex items-center gap-2 rounded-full border border-blue-500/20 bg-blue-500/10 px-3 py-1 text-[11px] font-mono uppercase tracking-[0.18em] text-blue-400">
+					<span>${topic}</span>
+				</span>
+			`).join('');
+		};
+
+		const updateButtonStates = () => {
+			const hasSelection = selectedTopics.length > 0;
+			if (clearBtn) {
+				clearBtn.classList.toggle('hidden', !hasSelection);
+				clearBtn.toggleAttribute('disabled', !hasSelection);
+			}
+			if (topicFilterCount) {
+				topicFilterCount.textContent = `${selectedTopics.length}/${MAX_SELECTED_TOPICS} selected`;
+				topicFilterCount.classList.toggle('border-blue-500/30', hasSelection);
+				topicFilterCount.classList.toggle('bg-blue-500/10', hasSelection);
+				topicFilterCount.classList.toggle('text-blue-400', hasSelection);
+				topicFilterCount.classList.toggle('border-neutral-800', !hasSelection);
+				topicFilterCount.classList.toggle('bg-neutral-950/80', !hasSelection);
+				topicFilterCount.classList.toggle('text-neutral-400', !hasSelection);
+			}
+
+			topicButtons.forEach((button) => {
+				const tag = button.getAttribute('data-tag-button');
+				if (!tag) return;
+				const isSelected = selectedTopics.some((topic) => normalizeTag(topic) === normalizeTag(tag));
+				const limitReached = selectedTopics.length >= MAX_SELECTED_TOPICS;
+				button.setAttribute('aria-pressed', String(isSelected));
+				button.toggleAttribute('disabled', !isSelected && limitReached);
+				button.classList.toggle('bg-blue-500/10', isSelected);
+				button.classList.toggle('text-blue-400', isSelected);
+				button.classList.toggle('border-blue-500/30', isSelected);
+				button.classList.toggle('bg-neutral-900', !isSelected);
+				button.classList.toggle('text-neutral-400', !isSelected);
+				button.classList.toggle('border-neutral-800', !isSelected);
+			});
+
+			if (allTopicsButton) {
+				allTopicsButton.classList.toggle('bg-blue-500/10', !hasSelection);
+				allTopicsButton.classList.toggle('text-blue-400', !hasSelection);
+				allTopicsButton.classList.toggle('border-blue-500/30', !hasSelection);
+				allTopicsButton.classList.toggle('bg-neutral-900', hasSelection);
+				allTopicsButton.classList.toggle('text-neutral-400', hasSelection);
+				allTopicsButton.classList.toggle('border-neutral-800', hasSelection);
+			}
+		};
+
+		const applyFilters = () => {
+			const normalizedSelectedTopics = selectedTopics.map(normalizeTag);
+			filteredItems = !normalizedSelectedTopics.length
+				? newsItems
+				: newsItems.filter((el) => {
+					const tagsAttr = el.getAttribute('data-tags');
+					if (!tagsAttr) return false;
+					const tags = tagsAttr.toLowerCase().split(',').map((value) => value.trim());
+					return normalizedSelectedTopics.some((topic) => tags.includes(topic));
+				});
+
+			const totalPages = Math.max(1, Math.ceil(filteredItems.length / ITEMS_PER_PAGE));
+			const safePage = Math.min(Math.max(currentPage, 1), totalPages);
+			currentPage = safePage;
+			const startIndex = (safePage - 1) * ITEMS_PER_PAGE;
+			const endIndex = startIndex + ITEMS_PER_PAGE;
+
+			newsItems.forEach((el) => {
+				el.style.display = 'none';
+			});
+
+			filteredItems.forEach((el, index) => {
+				el.style.display = index >= startIndex && index < endIndex ? 'block' : 'none';
+			});
+
+			syncQueryString(safePage);
+
+			if (paginationContainer) {
+				if (filteredItems.length <= ITEMS_PER_PAGE) {
+					paginationContainer.innerHTML = '';
+					paginationContainer.classList.add('hidden');
+					paginationContainer.classList.remove('flex');
+					return;
+				}
+
+				paginationContainer.classList.remove('hidden');
+				paginationContainer.classList.add('flex');
+
+				const prevDisabled = safePage <= 1;
+				const nextDisabled = safePage >= totalPages;
+				const createUrl = (page) => {
+					const nextParams = new URLSearchParams(window.location.search);
+					nextParams.set('page', page.toString());
+					return `${window.location.pathname}?${nextParams.toString()}`;
+				};
+
+				paginationContainer.innerHTML = `
+					<div class="text-sm font-mono text-neutral-500 mb-4 md:mb-0">
+						Showing ${Math.min(startIndex + 1, filteredItems.length)}-${Math.min(endIndex, filteredItems.length)} of ${filteredItems.length} intelligence logs
+					</div>
+					<div class="flex items-center gap-2">
+						<a href="${prevDisabled ? '#' : createUrl(safePage - 1)}"
+						   class="px-3 py-1.5 text-xs font-mono rounded-md border border-neutral-800 ${prevDisabled ? 'opacity-50 cursor-not-allowed bg-neutral-900/50 text-neutral-600' : 'bg-neutral-900 text-neutral-400 hover:bg-neutral-800 hover:text-white'} transition-all shadow-sm">
+							Previous
+						</a>
+						<div class="flex items-center gap-1 mx-2">
+							${Array.from({ length: totalPages }, (_, i) => i + 1).map(page => `
+								<a href="${createUrl(page)}"
+								   class="w-7 h-7 flex items-center justify-center text-xs font-mono rounded-md border ${page === safePage ? 'bg-blue-500/10 border-blue-500/30 text-blue-400' : 'border-neutral-800 bg-neutral-900 text-neutral-400 hover:bg-neutral-800 hover:text-white'} transition-all shadow-sm">
+									${page}
+								</a>
+							`).join('')}
+						</div>
+						<a href="${nextDisabled ? '#' : createUrl(safePage + 1)}"
+						   class="px-3 py-1.5 text-xs font-mono rounded-md border border-neutral-800 ${nextDisabled ? 'opacity-50 cursor-not-allowed bg-neutral-900/50 text-neutral-600' : 'bg-neutral-900 text-neutral-400 hover:bg-neutral-800 hover:text-white'} transition-all shadow-sm">
+							Next
+						</a>
+					</div>
+				`;
+			}
+		};
+
+		const syncFilterUi = () => {
+			renderSelectedTopics();
+			updateButtonStates();
+			updateTopicFilterSummary();
+			applyFilters();
+		};
 
 		const openSummary = () => {
 			if (!summaryModal || !summaryBackdrop || !summaryDialog) return;
@@ -286,97 +457,46 @@ const summaryThemes = [
 		closeSummaryBtn?.addEventListener('click', closeSummary);
 		summaryBackdrop?.addEventListener('click', closeSummary);
 		topicFilter?.addEventListener('toggle', updateTopicFilterSummary);
-		updateTopicFilterSummary();
 		document.addEventListener('keydown', (event) => {
 			if (event.key === 'Escape') closeSummary();
 		});
 
-		if (normalizedActiveTag) {
-			if (clearBtn) clearBtn.classList.remove('hidden');
+		clearBtn?.addEventListener('click', () => {
+			selectedTopics = [];
+			currentPage = 1;
+			syncFilterUi();
+		});
+
+		allTopicsButton?.addEventListener('click', () => {
+			selectedTopics = [];
+			currentPage = 1;
+			syncFilterUi();
 			if (topicFilter instanceof HTMLDetailsElement) {
-				topicFilter.open = true;
-				updateTopicFilterSummary();
+				topicFilter.open = false;
 			}
-			if (topicFilterActivePill) {
-				topicFilterActivePill.textContent = activeTag?.trim() || '';
-				topicFilterActivePill.classList.remove('hidden');
-			}
+		});
 
-			filteredItems = newsItems.filter((el) => {
-				const tagsAttr = el.getAttribute('data-tags');
-				return tagsAttr && tagsAttr.toLowerCase().split(',').map((s) => s.trim()).includes(normalizedActiveTag);
-			});
+		topicButtons.forEach((button) => {
+			button.addEventListener('click', () => {
+				const tag = button.getAttribute('data-tag-button');
+				if (!tag) return;
+				const existingIndex = selectedTopics.findIndex((topic) => normalizeTag(topic) === normalizeTag(tag));
+				if (existingIndex >= 0) {
+					selectedTopics = selectedTopics.filter((topic) => normalizeTag(topic) !== normalizeTag(tag));
+				} else if (selectedTopics.length < MAX_SELECTED_TOPICS) {
+					selectedTopics = [...selectedTopics, tag];
+				} else {
+					return;
+				}
 
-			newsItems.forEach((el) => {
-				if (!filteredItems.includes(el)) el.style.display = 'none';
-			});
-
-			document.querySelectorAll('[data-tag-link]').forEach((link) => {
-				const linkTag = link.getAttribute('data-tag-link');
-				if (linkTag && linkTag.toLowerCase().trim() === normalizedActiveTag) {
-					link.classList.remove('bg-neutral-900', 'text-neutral-400', 'border-neutral-800');
-					link.classList.add('bg-blue-500/10', 'text-blue-400', 'border-blue-500/30');
+				currentPage = 1;
+				syncFilterUi();
+				if (topicFilter instanceof HTMLDetailsElement) {
+					topicFilter.open = false;
 				}
 			});
-		} else {
-			const allLink = document.querySelector('[data-filter="all"]');
-			if (allLink) {
-				allLink.classList.remove('bg-neutral-900', 'text-neutral-400', 'border-neutral-800');
-				allLink.classList.add('bg-blue-500/10', 'text-blue-400', 'border-blue-500/30');
-			}
-		}
+		});
 
-		if (filteredItems.length > ITEMS_PER_PAGE) {
-			const totalPages = Math.ceil(filteredItems.length / ITEMS_PER_PAGE);
-			const startIndex = (activePage - 1) * ITEMS_PER_PAGE;
-			const endIndex = startIndex + ITEMS_PER_PAGE;
-
-			filteredItems.forEach((el, index) => {
-				el.style.display = index >= startIndex && index < endIndex ? 'block' : 'none';
-			});
-
-			const paginationContainer = document.getElementById('pagination-controls');
-			if (paginationContainer) {
-				paginationContainer.classList.remove('hidden');
-				paginationContainer.classList.add('flex');
-
-				const prevDisabled = activePage <= 1;
-				const nextDisabled = activePage >= totalPages;
-
-				const createUrl = (page) => {
-					const newParams = new URLSearchParams(window.location.search);
-					newParams.set('page', page.toString());
-					return `${window.location.pathname}?${newParams.toString()}`;
-				};
-
-				paginationContainer.innerHTML = `
-					<div class="text-sm font-mono text-neutral-500 mb-4 md:mb-0">
-						Showing ${Math.min(startIndex + 1, filteredItems.length)}-${Math.min(endIndex, filteredItems.length)} of ${filteredItems.length} intelligence logs
-					</div>
-					<div class="flex items-center gap-2">
-						<a href="${prevDisabled ? '#' : createUrl(activePage - 1)}"
-						   class="px-3 py-1.5 text-xs font-mono rounded-md border border-neutral-800 ${prevDisabled ? 'opacity-50 cursor-not-allowed bg-neutral-900/50 text-neutral-600' : 'bg-neutral-900 text-neutral-400 hover:bg-neutral-800 hover:text-white'} transition-all shadow-sm">
-							Previous
-						</a>
-						<div class="flex items-center gap-1 mx-2">
-							${Array.from({ length: totalPages }, (_, i) => i + 1).map(page => `
-								<a href="${createUrl(page)}"
-								   class="w-7 h-7 flex items-center justify-center text-xs font-mono rounded-md border ${page === activePage ? 'bg-blue-500/10 border-blue-500/30 text-blue-400' : 'border-neutral-800 bg-neutral-900 text-neutral-400 hover:bg-neutral-800 hover:text-white'} transition-all shadow-sm">
-									${page}
-								</a>
-							`).join('')}
-						</div>
-						<a href="${nextDisabled ? '#' : createUrl(activePage + 1)}"
-						   class="px-3 py-1.5 text-xs font-mono rounded-md border border-neutral-800 ${nextDisabled ? 'opacity-50 cursor-not-allowed bg-neutral-900/50 text-neutral-600' : 'bg-neutral-900 text-neutral-400 hover:bg-neutral-800 hover:text-white'} transition-all shadow-sm">
-							Next
-						</a>
-					</div>
-				`;
-			}
-		} else {
-			filteredItems.forEach((el) => {
-				el.style.display = 'block';
-			});
-		}
+		syncFilterUi();
 	</script>
 </Layout>
