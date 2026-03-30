@@ -239,7 +239,7 @@ const summaryThemes = [
 		const ITEMS_PER_PAGE = 20;
 		const MAX_SELECTED_TOPICS = 3;
 
-		const normalizeTag = (tag) => tag.toLowerCase().trim();
+		const normalizeTag = (tag: string) => tag.toLowerCase().trim();
 		const selectedTopicsFromUrl = [
 			...params.getAll('tags').flatMap((value) => value.split(',')),
 			...((params.get('tag') || '').split(',')),
@@ -251,15 +251,15 @@ const summaryThemes = [
 
 		let selectedTopics = selectedTopicsFromUrl;
 		let currentPage = initialPage;
-		const newsItems = Array.from(document.querySelectorAll('.news-item'));
+		const newsItems = Array.from(document.querySelectorAll<HTMLElement>('.news-item'));
 		let filteredItems = newsItems;
-		const clearBtn = document.getElementById('clear-filter-btn');
+		const clearBtn = document.getElementById('clear-filter-btn') as HTMLButtonElement | null;
 		const topicFilter = document.getElementById('topic-filter');
 		const topicFilterSummaryLabel = document.getElementById('topic-filter-summary-label');
 		const topicFilterCount = document.getElementById('topic-filter-count');
 		const topicFilterSelected = document.getElementById('topic-filter-selected');
-		const topicButtons = Array.from(document.querySelectorAll('[data-tag-button]'));
-		const allTopicsButton = document.querySelector('[data-filter="all"]');
+		const topicButtons = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-tag-button]'));
+		const allTopicsButton = document.querySelector<HTMLButtonElement>('[data-filter="all"]');
 
 		const updateTopicFilterSummary = () => {
 			if (!(topicFilter instanceof HTMLDetailsElement) || !topicFilterSummaryLabel) return;
@@ -394,7 +394,7 @@ const summaryThemes = [
 
 				const prevDisabled = safePage <= 1;
 				const nextDisabled = safePage >= totalPages;
-				const createUrl = (page) => {
+				const createUrl = (page: number) => {
 					const nextParams = new URLSearchParams(window.location.search);
 					nextParams.set('page', page.toString());
 					return `${window.location.pathname}?${nextParams.toString()}`;
