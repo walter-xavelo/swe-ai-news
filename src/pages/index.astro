@@ -132,23 +132,51 @@ const summaryThemes = [
 	</div>
 	
 	<section class="mb-10">
-		<div class="flex flex-wrap items-center justify-between mb-4 gap-4">
-			<div class="flex items-center gap-3">
-				<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-neutral-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" /></svg>
-				<h2 class="text-xs font-mono text-neutral-400 uppercase tracking-wider">Filter by Topic</h2>
+		<div class="rounded-2xl border border-neutral-800/70 bg-neutral-900/40 shadow-sm overflow-hidden">
+			<div class="flex flex-col gap-4 border-b border-neutral-800/70 px-4 py-4 sm:px-5">
+				<div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+					<div class="flex items-start gap-3">
+						<div class="mt-0.5 rounded-xl border border-neutral-800 bg-neutral-950/80 p-2 text-neutral-500">
+							<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" /></svg>
+						</div>
+						<div>
+							<h2 class="text-xs font-mono uppercase tracking-[0.2em] text-neutral-400">Filter by Topic</h2>
+							<p class="mt-1 text-sm text-neutral-500">Browse <span class="font-mono text-neutral-300">{allTags.length}</span> topic tags without crowding the page.</p>
+						</div>
+					</div>
+					<div class="flex flex-wrap items-center gap-2">
+						<span id="topic-filter-active-pill" class="hidden rounded-full border border-blue-500/20 bg-blue-500/10 px-3 py-1 text-[11px] font-mono uppercase tracking-[0.18em] text-blue-400"></span>
+						<a href={import.meta.env.BASE_URL} id="clear-filter-btn" class="hidden text-xs font-mono text-orange-400 hover:text-orange-300 flex items-center gap-1.5 transition-colors border border-orange-500/30 bg-orange-500/10 px-2.5 py-1.5 rounded-md shadow-sm">
+							<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" /></svg>
+							Clear Filter
+						</a>
+					</div>
+				</div>
+				<details id="topic-filter" class="group rounded-xl border border-neutral-800/80 bg-black/20">
+					<summary class="flex cursor-pointer list-none flex-col gap-3 px-4 py-3 text-left marker:hidden sm:flex-row sm:items-center sm:justify-between">
+						<div>
+							<p class="text-sm font-medium text-neutral-200">Topic filters</p>
+							<p class="mt-1 text-xs font-mono text-neutral-500">Expand to jump directly into a topic or narrow the news stream.</p>
+						</div>
+						<div class="inline-flex items-center gap-2 self-start rounded-md border border-neutral-800 bg-neutral-950/80 px-3 py-2 text-xs font-mono text-neutral-300 transition-colors group-open:border-blue-500/30 group-open:bg-blue-500/10 group-open:text-blue-400 sm:self-auto">
+							<span id="topic-filter-summary-label">Show topics</span>
+							<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform duration-200 group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+							</svg>
+						</div>
+					</summary>
+					<div id="topic-filter-panel" class="border-t border-neutral-800/70 px-4 py-4">
+						<div class="flex flex-wrap gap-2">
+							<a href={import.meta.env.BASE_URL} class="px-3 py-1.5 text-xs font-mono rounded-md border border-neutral-800 bg-neutral-900 text-neutral-400 hover:bg-neutral-800 hover:text-white transition-all shadow-sm" data-filter="all">All Topics</a>
+							{allTags.map((tag) => (
+								<a href={`${import.meta.env.BASE_URL}?tag=${tag}`} class="px-3 py-1.5 text-xs font-mono rounded-md border border-neutral-800 bg-neutral-900 text-neutral-400 hover:bg-neutral-800 hover:text-white transition-all shadow-sm" data-tag-link={tag}>
+									{tag}
+								</a>
+							))}
+						</div>
+					</div>
+				</details>
 			</div>
-			<a href={import.meta.env.BASE_URL} id="clear-filter-btn" class="hidden text-xs font-mono text-orange-400 hover:text-orange-300 flex items-center gap-1.5 transition-colors border border-orange-500/30 bg-orange-500/10 px-2.5 py-1.5 rounded-md shadow-sm">
-				<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" /></svg>
-				Clear Filter
-			</a>
-		</div>
-		<div class="flex flex-wrap gap-2">
-			<a href={import.meta.env.BASE_URL} class="px-3 py-1.5 text-xs font-mono rounded-md border border-neutral-800 bg-neutral-900 text-neutral-400 hover:bg-neutral-800 hover:text-white transition-all shadow-sm" data-filter="all">All Topics</a>
-			{allTags.map((tag) => (
-				<a href={`${import.meta.env.BASE_URL}?tag=${tag}`} class="px-3 py-1.5 text-xs font-mono rounded-md border border-neutral-800 bg-neutral-900 text-neutral-400 hover:bg-neutral-800 hover:text-white transition-all shadow-sm" data-tag-link={tag}>
-					{tag}
-				</a>
-			))}
 		</div>
 	</section>
 
@@ -218,6 +246,15 @@ const summaryThemes = [
 		const newsItems = Array.from(document.querySelectorAll('.news-item'));
 		let filteredItems = newsItems;
 		const clearBtn = document.getElementById('clear-filter-btn');
+		const topicFilter = document.getElementById('topic-filter');
+		const topicFilterSummaryLabel = document.getElementById('topic-filter-summary-label');
+		const topicFilterActivePill = document.getElementById('topic-filter-active-pill');
+		const normalizedActiveTag = activeTag?.toLowerCase().trim();
+
+		const updateTopicFilterSummary = () => {
+			if (!(topicFilter instanceof HTMLDetailsElement) || !topicFilterSummaryLabel) return;
+			topicFilterSummaryLabel.textContent = topicFilter.open ? 'Hide topics' : 'Show topics';
+		};
 
 		const summaryModal = document.getElementById('summary-modal');
 		const summaryBackdrop = document.getElementById('summary-backdrop');
@@ -248,16 +285,26 @@ const summaryThemes = [
 		openSummaryBtn?.addEventListener('click', openSummary);
 		closeSummaryBtn?.addEventListener('click', closeSummary);
 		summaryBackdrop?.addEventListener('click', closeSummary);
+		topicFilter?.addEventListener('toggle', updateTopicFilterSummary);
+		updateTopicFilterSummary();
 		document.addEventListener('keydown', (event) => {
 			if (event.key === 'Escape') closeSummary();
 		});
 
-		if (activeTag) {
+		if (normalizedActiveTag) {
 			if (clearBtn) clearBtn.classList.remove('hidden');
+			if (topicFilter instanceof HTMLDetailsElement) {
+				topicFilter.open = true;
+				updateTopicFilterSummary();
+			}
+			if (topicFilterActivePill) {
+				topicFilterActivePill.textContent = activeTag?.trim() || '';
+				topicFilterActivePill.classList.remove('hidden');
+			}
 
 			filteredItems = newsItems.filter((el) => {
 				const tagsAttr = el.getAttribute('data-tags');
-				return tagsAttr && tagsAttr.toLowerCase().split(',').map((s) => s.trim()).includes(activeTag.toLowerCase().trim());
+				return tagsAttr && tagsAttr.toLowerCase().split(',').map((s) => s.trim()).includes(normalizedActiveTag);
 			});
 
 			newsItems.forEach((el) => {
@@ -266,7 +313,7 @@ const summaryThemes = [
 
 			document.querySelectorAll('[data-tag-link]').forEach((link) => {
 				const linkTag = link.getAttribute('data-tag-link');
-				if (linkTag && linkTag.toLowerCase().trim() === activeTag.toLowerCase().trim()) {
+				if (linkTag && linkTag.toLowerCase().trim() === normalizedActiveTag) {
 					link.classList.remove('bg-neutral-900', 'text-neutral-400', 'border-neutral-800');
 					link.classList.add('bg-blue-500/10', 'text-blue-400', 'border-blue-500/30');
 				}
